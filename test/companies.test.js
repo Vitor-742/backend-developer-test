@@ -7,7 +7,7 @@ import { app } from '../src/api.js';
 
 describe('Companies test', () => {
   describe('GET /companies', () => {
-    context('successful request', () => {// fazer aparecer no log e ta alternadno
+    context('successful request', () => {
 
       // requisicao http    
       request('http://localhost:3000/companies', (error, response, body) => {
