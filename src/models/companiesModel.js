@@ -1,4 +1,4 @@
-const pool = require('./connectionPool')
+import { pool } from './connectionPool.js'
 
 const readAll = async () => {
 
@@ -26,6 +26,4 @@ const readAll = async () => {
     return { status: 200, companies: result.rows };
 };
 
-module.exports = {
-    readAll,
-};
+export { readAll }

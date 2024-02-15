@@ -1,7 +1,8 @@
-const express = require('express');
+//const express = require('express');
+import express from 'express';
 
 const companiesRouter = express.Router();
-const { listCompanies } = require('../services/companiesService')
+import listCompanies from '../services/companiesService.js';
 
 // rota - GET /companies
 companiesRouter.get('/', async (req, res) => {
@@ -16,4 +17,5 @@ companiesRouter.get('/', async (req, res) => {
     return res.status(response.status).json(response.companies);
 });
 
-module.exports = companiesRouter;
+//module.exports = companiesRouter;
+export { companiesRouter };

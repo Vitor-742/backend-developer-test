@@ -1,6 +1,11 @@
-require("dotenv").config();
+// import dotenv from 'dotenv';
+// dotenv.config({ path: '../.env' });
 
-const app = require('./api');
+import 'dotenv/config'
+
+import { app } from './api.js'
+//import app from './api';
+
 const port = 3000;
 
 app.get('/', (req, res) => {
