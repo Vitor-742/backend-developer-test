@@ -1,7 +1,7 @@
 import express from 'express';
 
 const jobsRouter = express.Router();
-import { newJob, updateStatus, editJob } from '../services/jobsService.js';
+import { newJob, updateStatus, editJob, removeJob } from '../services/jobsService.js';
 
 // rota - POST /jobs
 jobsRouter.post('/', async (req, res) => {
@@ -46,6 +46,21 @@ jobsRouter.put('/:job_id', async (req, res) => {
     if (status === 400) return res.status(status).json(error);
 
     return res.status(status).json("Job Edited!");
+});
+
+// rota - DELETE /job/:job_id
+jobsRouter.delete('/:job_id', async (req, res) => {
+    console.log("DELETE /job/:job_id");
+
+    const { job_id } = req.params;
+
+    // chama servico que remove job
+    const { status, error } = await removeJob(job_id);
+
+    // caso tenha ocorrido erro no processamento informa o usuario
+    if (status === 400) return res.status(status).json(error);
+
+    return res.status(status).json("Job Deleted!");
 });
 
 export { jobsRouter };

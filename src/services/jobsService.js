@@ -1,4 +1,4 @@
-import { createJob, updateJobStatus, updateJobData } from '../models/jobsModel.js';
+import { createJob, updateJobStatus, updateJobData, deleteJob } from '../models/jobsModel.js';
 import verifyUUID from '../utils/verifyUUID.js';
 
 // servico que cria job
@@ -76,4 +76,23 @@ const editJob = async ({ title, description, location }, job_id) => {
     return jobUpdated;
 };
 
-export { newJob, updateStatus, editJob };
+// servico que deleta job
+const removeJob = async (job_id) => {
+    console.log("removing job");
+
+    // verifica se id esta no formato esperado
+    if (!verifyUUID(job_id)) {
+        const message = 'id isnt in the expected UUID format';
+
+        // retorna mensagem de erro
+        console.log(message);
+        return { status: 400, error: { message } };
+    }
+
+    // chama remove do banco e retorna
+    const jobRemoved = await deleteJob(job_id);
+
+    return jobRemoved;
+};
+
+export { newJob, updateStatus, editJob, removeJob };
