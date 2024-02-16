@@ -1,7 +1,7 @@
 import express from 'express';
 
 const jobsRouter = express.Router();
-import { newJob } from '../services/jobsService.js';
+import { newJob, updateStatus } from '../services/jobsService.js';
 
 // rota - POST /jobs
 jobsRouter.post('/', async (req, res) => {
@@ -16,6 +16,21 @@ jobsRouter.post('/', async (req, res) => {
     if (status === 400) return res.status(status).json(error);
 
     return res.status(status).json("Job Created!");
+});
+
+// rota - PUT /job/:job_id/publish
+jobsRouter.put('/:job_id/publish', async (req, res) => {
+    console.log("PUT /job/:job_id/publish");
+
+    const { job_id } = req.params;
+
+    // chama servico que publica job
+    const { status, error } = await updateStatus('published', job_id);
+
+    // caso tenha ocorrido erro no processamento informa o usuario
+    if (status === 400) return res.status(status).json(error);
+
+    return res.status(status).json("Job Published!");
 });
 
 export { jobsRouter };
