@@ -15,7 +15,7 @@ jobsRouter.post('/', async (req, res) => {
     // caso tenha ocorrido erro no processamento informa o usuario
     if (status === 400) return res.status(status).json(error);
 
-    return res.status(status).json("Job created");
+    return res.status(status).json("Job Created!");
 });
 
 export { jobsRouter };
