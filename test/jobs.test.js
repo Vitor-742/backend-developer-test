@@ -163,7 +163,7 @@ describe('Jobs test', () => {
         
     })
   })
-  describe('PUT /jobs/:id/publish', () => {
+  describe('PUT /jobs/:id', () => {
     context('successful request', () => {
 
         // configuracao da requisicao
@@ -258,9 +258,65 @@ describe('Jobs test', () => {
                 expect(body.message).to.equal('body isnt in the expected format');
             }) 
             done()
+        })
+        
+    })
+  })
+  describe('DELETE /jobs/:job_id', () => {
+    context('successful request', () => {
+
+        // configuracao da requisicao
+        const options = {
+            url: 'http://localhost:3000/jobs/45da5a40-7328-44a3-87f8-43873e6a6539',
+            method: 'DELETE',
+            json: true,
+        };
+
+        it('return status 200', (done) => {
+
+            request.delete(options, (error, response, body) => {
+                expect(response.statusCode).to.equal(200);
+            })            
+            done()
+        })
+
+        it('return correct string', (done) => {
+
+            request.delete(options, (error, response, body) => {
+                expect(body).to.equal('Job Deleted!');
+            })  
+            done()
             
         })
         
     })
-  })  
+    context('fail request', () => {
+
+        // configuracao da requisicao
+        const options = {
+            url: 'http://localhost:3000/jobs/1234',
+            method: 'DELETE',
+            json: true,
+        };
+
+        it('return status 400', (done) => {
+
+            request.delete(options, (error, response, body) => {
+                expect(response.statusCode).to.equal(400);
+            })            
+            done()
+        })
+
+        it('return correct string', (done) => {
+
+            request.put(options, (error, response, body) => {
+                expect(body).to.have.property('message');
+                expect(body.message).to.equal('id isnt in the expected UUID format');
+            }) 
+            done()
+            
+        })
+        
+    })
+  })
 });
