@@ -63,4 +63,19 @@ jobsRouter.delete('/:job_id', async (req, res) => {
     return res.status(status).json("Job Deleted!");
 });
 
+// rota - PUT /job/:job_id/archive
+jobsRouter.put('/:job_id/archive', async (req, res) => {
+    console.log("PUT /job/:job_id/archive");
+
+    const { job_id } = req.params;
+
+    // chama servico que arquiva job
+    const { status, error } = await updateStatus('archived', job_id);
+
+    // caso tenha ocorrido erro no processamento informa o usuario
+    if (status === 400) return res.status(status).json(error);
+
+    return res.status(status).json("Job Archived!");
+});
+
 export { jobsRouter };
