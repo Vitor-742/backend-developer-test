@@ -106,4 +106,61 @@ describe('Jobs test', () => {
         
     })
   });
+  describe('PUT /jobs/:id/publish', () => {
+    context('successful request', () => {
+
+        // configuracao da requisicao
+        const options = {
+            url: 'http://localhost:3000/jobs/45da5a40-7328-44a3-87f8-43873e6a6539/publish',
+            method: 'PUT',
+            json: true,
+        };
+
+        it('return status 200', (done) => {
+
+            request.put(options, (error, response, body) => {
+                expect(response.statusCode).to.equal(200);
+            })            
+            done()
+        })
+
+        it('return correct string', (done) => {
+
+            request.put(options, (error, response, body) => {
+                expect(body).to.equal('Job Published!');
+            })  
+            done()
+            
+        })
+        
+    })
+    context('fail request', () => {
+
+        // configuracao da requisicao
+        const options = {
+            url: 'http://localhost:3000/jobs/1234/publish',
+            method: 'PUT',
+            json: true,
+        };
+
+        it('return status 400', (done) => {
+
+            request.put(options, (error, response, body) => {
+                expect(response.statusCode).to.equal(400);
+            })            
+            done()
+        })
+
+        it('return correct string', (done) => {
+
+            request.put(options, (error, response, body) => {
+                expect(body).to.have.property('message');
+                expect(body.message).to.equal('id isnt in the expected UUID format');
+            }) 
+            done()
+            
+        })
+        
+    })
+  })
 });
