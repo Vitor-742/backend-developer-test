@@ -9,8 +9,8 @@ try {
         insert into companies (id, name) values ('7034a6b4-99d4-4e34-8fb5-527ac6eeffe4', 'ABC Corp');
         insert into companies (name) values ('XYZ LLC');
         insert into companies (name) values ('ACME Enterprises');
-        insert into jobs (id, company_id, title, description, location)
-        values ('45da5a40-7328-44a3-87f8-43873e6a6539', '7034a6b4-99d4-4e34-8fb5-527ac6eeffe4', 'dev1', 'programar', 'SP');
+        insert into jobs (id, company_id, title, description, location, status)
+        values ('45da5a40-7328-44a3-87f8-43873e6a6539', '7034a6b4-99d4-4e34-8fb5-527ac6eeffe4', 'dev1', 'programar', 'SP', 'published');
         insert into jobs (id, company_id, title, description, location)
         values ('deb5ca22-c701-4d13-ba68-1160121f26a3', '7034a6b4-99d4-4e34-8fb5-527ac6eeffe4', 'dev2', 'desenvolver', 'MG');
         insert into jobs (id, company_id, title, description, location)
