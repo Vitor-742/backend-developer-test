@@ -7,9 +7,9 @@
   "scripts": {
     "start": "node src/index.js",
     "start-dev": "nodemon src/index.js",
-    "test-companies": "node ./test/resetDatabase && mocha -t 4500 --exit ./test/companies.test.js",
-    "test-jobs": "node ./test/resetDatabase && mocha -t 4500 --exit ./test/jobs.test.js",
-    "test-feed": "node ./test/resetDatabase && mocha -t 4500 --exit ./test/feed.test.js"
+    "test-companies": "node ./src/utils/resetDatabase && mocha -t 4500 --exit ./test/companies.test.js",
+    "test-jobs": "node ./src/utils/resetDatabase && mocha -t 4500 --exit ./test/jobs.test.js",
+    "test-feed": "node ./src/utils/resetDatabase && mocha -t 4500 --exit ./test/feed.test.js"
   },
   "author": "Vitor Campos",
   "license": "ISC",

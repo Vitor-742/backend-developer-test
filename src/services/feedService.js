@@ -7,8 +7,6 @@ const listPublishedJobs = async () => {
     // chama leitura dos dados a camada de modelo
     const publishedJobs = await readPublishedJobs();
 
-    console.log(publishedJobs)
-
     return publishedJobs;
 };
 

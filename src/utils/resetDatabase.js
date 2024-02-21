@@ -1,4 +1,4 @@
-import { pool } from '../src/models/connectionPool.js'
+import { pool } from './connectionPool.js'
 
 const client = await pool.connect();
 

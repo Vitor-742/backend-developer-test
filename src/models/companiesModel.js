@@ -1,4 +1,4 @@
-import { pool } from './connectionPool.js'
+import { pool } from '../utils/connectionPool.js'
 
 const readAll = async () => {
 
