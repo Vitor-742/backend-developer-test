@@ -1,80 +1,87 @@
 # Backend Developer Technical Assessment
 
-## Welcome!
+- projeto desenvolvido por Vitor Campos, para desafio técnico
 
-We're excited to have you participate in our Backend Developer technical assessment. This test is designed to gauge your expertise in backend development, with a focus on architectural and organizational skills. Below, you'll find comprehensive instructions to set up and complete the project. Remember, completing every step is not mandatory; some are optional but can enhance your application.
+## Tecnologias aplicadas
 
-## Assessment Overview
+Neste projeto foi utilizado:
+- Node.js 20.11
+- express 4.18
+- pg 8.11 | lib para requisicoes ao banco de dados postgresql
+- request 2.88 | lib para requisicoes http
+- chai 5.1 | lib para assercoes de testes
+- mocha 10.3 | framework de testes
+- nodemon 3.0 | ferramenta auxiliar para desenvolvimento
+- aws-sdk 2.1561 | sdk da aws para funcao lambda
 
-Your task is to develop a NodeJS API for a job posting management application. Analyze the application details and use cases, and translate them into functional endpoints.
+## Para iniciar a aplicação
 
-### Application Components
+1. Clone o projeto para sua pasta
+2. Entre no diretório, abra o terminal e digite `npm i`
+3. Insira as variaveis do banco de dados
+    3.1 Crie um arquivo `.env` na pasta
+    3.2 Insira os dados de conexão do banco de dados (aqui seriam as suas credenciais, porém o banco de dados postgres ja está online com aws RDS)
+        3.2.1 Variáveis para conexão com aws RDS:
+        `DB_USER=postgres
+        DB_HOST=jobs-and-companies.cf6iw0q0o38z.us-east-2.rds.amazonaws.com
+        DB_NAME=postgres
+        DB_PASSWORD=jobsandcompanies
+        DB_PORT=5432`
+4. Para iniciar a aplicação basta digitar no terminal `npm start`
+5. Pronto! A aplicação já está funcionando, agora você já pode fazer requisições
 
-Your solution should incorporate the following components and libraries:
+## Endpoints
 
-1. **Relational Database**: Utilize a SQL database (PostgreSQL 16) with two tables (`companies` and `jobs`). The DDL script in the `ddl` folder of this repository initializes these tables. The `companies` table is pre-populated with fictitious records, which you should not modify. Focus on managing records in the `jobs` table. You don't need to worry about setting up the database, consider the database is already running in the cloud. Your code only needs to handle database connections. To test your solution, use your own database running locally or in the server of your choice.
+1. GET /companies - Lista as companies cadastradas
 
-2. **REST API**: Develop using NodeJS (version 20) and ExpressJS. This API will manage the use cases described below.
+`GET http://localhost:3000/companies`
 
-3. **Serverless Environment**: Implement asynchronous, event-driven logic using AWS Lambda and AWS SQS for queue management.
+2. GET /companies/:company_id - Busca company com id específico
+    2.1 company_id se refere ao id da company no banco de dados
 
-4. **Job Feed Repository**: Integrate a job feed with AWS S3. This feed should periodically update a JSON file reflecting the latest job postings.
+`GET http://localhost:3000/companies/:company_id`
 
-### User Actions
+3. POST /jobs - Cria job com status 'draft'
+    3.1 body de exemplo:
+        {
+            "company_id": "3660a3df-e408-4046-9426-2d95f67035da",
+            "title": "dev",
+            "description": "programar",
+            "location": "SP"
+    }
 
-Convert the following use cases into API endpoints:
+`POST http://localhost:3000/jobs/`
 
-- `GET /companies`: List existing companies.
-- `GET /companies/:company_id`: Fetch a specific company by ID.
-- `POST /job`: Create a job posting draft.
-- `PUT /job/:job_id/publish`: Publish a job posting draft.
-- `PUT /job/:job_id`: Edit a job posting draft (title, location, description).
-- `DELETE /job/:job_id`: Delete a job posting draft.
-- `PUT /job/:job_id/archive`: Archive an active job posting.
+4. PUT /jobs/:job_id/publish - atualiza status do job para 'published'
+    4.1 job_id indica qual id do job que será publicado
 
-### Integration Features
+`PUT http://localhost:3000/jobs/:job_id/publish`
 
-- Implement a `GET /feed` endpoint to serve a job feed in JSON format, containing published jobs (column `status = 'published'`). Use a caching mechanism to handle high traffic, fetching data from an S3 file updated periodically by an AWS Lambda function. The feed should return the job ID, title, description, company name and the date when the job was created. This endpoint should not query the database, the content must be fetched from S3.
-- This endpoint receives a massive number of requests every minute, so the strategy here is to implement a simple cache mechanism that will fetch a previously stored JSON file containing the published jobs and serve the content in the API. You need to implement a serverless component using AWS Lambda, that will periodically query the published jobs and store the content on S3. The `GET /feed` endpoint should fetch the S3 file and serve the content. You don't need to worry about implementing the schedule, assume it is already created using AWS EventBridge. You only need to create the Lambda component, using NodeJS 20 as a runtime.
+5. PUT /jobs/:job_id - Edita dados do job como title, location e description
+    5.1 job_id indica qual id do job que será editado
+    5.2 body de exemplo:
+        {
+            "title": "escritor",
+            "description": "escrever",
+            "location": "MG"
+    }
 
-### Extra Feature (Optional)
+`PUT http://localhost:3000/jobs/:job_id`
 
-- **Job Moderation**: using artificial intelligence, we need to moderate the job content before allowing it to be published, to check for potential harmful content.
-Every time a user requests a job publication (`PUT /job/:job_id/publish`), the API should reply with success to the user, but the job should not be immediately published. It should be queued using AWS SQS, feeding the job to a Lambda component.
-Using OpenAI's free moderation API, create a Lambda component that will evaluate the job title and description, and test for hamrful content. If the content passes the evaluation, the component should change the job status to `published`, otherwise change to `rejected` and add the response from OpenAI API to the `notes` column.
+6. DELETE /jobs/:job_id - Deleta job
+    6.1 job_id indica qual id do job que será deletado
 
-### Bonus Questions
+`DELETE http://localhost:3000/jobs/:job_id`
 
-1. Discuss scalability solutions for the job moderation feature under high load conditions. Consider that over time the system usage grows significantly, to the point where we will have thousands of jobs published every hour. Consider the API will be able to handle the requests, but the serverless component will be overwhelmed with requests to moderate the jobs. This will affect the database connections and calls to the OpenAI API. How would you handle those issues and what solutions would you implement to mitigate the issues?
-2. Propose a strategy for delivering the job feed globally with sub-millisecond latency. Consider now that we need to provide a low latency endpoint that can serve the job feed content worldwide. Using AWS as a cloud provider, what technologies would you need to use to implement this feature and how would you do it?
+7. PUT /jobs/:job_id/archive - Altera o status do job para 'archived'
+    7.1 job_id indica qual id do job que será arquivado
 
-## Instructions
+`PUT http://localhost:3000/jobs/:job_id/archive`
 
-1. Fork this repository and create a branch named after yourself.
-2. Develop the solution in your branch.
-3. Use your AWS account or other environment of your choice to test and validate your solution.
-4. Update the README with setup and execution instructions.
-5. Complete your test by sending a message through the Plooral platform with your repository link and branch name.
+8. GET /feed - Retorna jobs publicados (lidos do aws S3)
 
-## Evaluation Criteria
+`GET http://localhost:3000/feed`
 
-We will assess:
+## Banco de dados AWS Relational Database Service
 
-- Knowledge of JavaScript, Node.js, Express.js.
-- Proficiency with serverless components (Lambda, SQS).
-- Application structure and layering.
-- Effective use of environment variables.
-- Implementation of unit tests, logging, and error handling.
-- Documentation quality and code readability.
-- Commit history and overall code organization.
-
-Good luck, and we're looking forward to seeing your innovative solutions!
-Implementation of the user actions and integration features is considered mandatory for the assessment. The extra feature and the bonus questions are optional, but we encourage you to complete them as well, it will give you an additional edge over other candidates.
-
-## A Note on the Use of AI Tools
-
-In today's evolving tech landscape, AI tools such as ChatGPT and GitHub Copilot have become valuable resources for developers. We recognize the potential of these tools in aiding problem-solving and coding. While we do not prohibit the use of AI in this assessment, we encourage you to primarily showcase your own creativity and problem-solving skills. Your ability to think critically and design solutions is what we're most interested in.
-
-That said, if you do choose to utilize AI tools, we would appreciate it if you could share details about this in your submission. Include the prompts you used, how you interacted with the AI, and how it influenced your development process. This will give us additional insight into your approach to leveraging such technologies effectively.
-
-Remember, this assessment is not just about getting to the solution, but also about demonstrating your skills, creativity, and how you navigate and integrate the use of emerging technologies in your work.
+Depois de pesquisa, foi visto que um banco de dados em cloud seria favorável ao projeto. Como já são utilizados outros serviços da aws, que teriam que ser integrados com o banco de dados relacional, usar o AWS RDS facilita e melhora o desenvolvimento, além de outros benefícios, como poder ser acessado de qualquer lugar com seus dados íntegros. Por esse motivo as configurações do banco já estão prontas.
