@@ -120,7 +120,21 @@ O programa foi construído com base no modelo MSC, que apresenta:
   ![lambdafunction](https://github.com/Vitor-742/backend-developer-test/assets/72372471/afaef538-54a7-4cc1-8126-e4e5c79a471e)
 
 ## Questions
+1. **Discuss scalability solutions for the job moderation feature under high load conditions. Consider that over time the system usage grows significantly, to the point where we will have thousands of jobs published every hour. Consider the API will be able to handle the requests, but the serverless component will be overwhelmed with requests to moderate the jobs. This will affect the database connections and calls to the OpenAI API. How would you handle those issues and what solutions would you implement to mitigate the issues?**
 
+    Exist mechanisms and methods that can be adopted to solve problems such as thousands of requests in API, database connections, and requests to OpenAI.
+- One of the most widely used methods is the use of managed queue services, such as AWS SQS, which was seen in the project. It help to control requests, it also removes users from waiting screens that reduce interest
+- In most serverless functions, have ways to create more instances to support more requests, even automating this growth to make the application more dynamic.
+- To reduce the problem with OpenAI, it is also possible to decrease the number of requests by handling more expected user cases.
+
+2. **Propose a strategy for delivering the job feed globally with sub-millisecond latency. Consider now that we need to provide a low latency endpoint that can serve the job feed content worldwide. Using AWS as a cloud provider, what technologies would you need to use to implement this feature and how would you do it?**
+
+    The strategy chosen is use the following tools:
+
+- Amazon ElastiCache: Caching service to speed up the data access process.
+- Amazon DynamoDB: NoSQL database with high speed delivery and scalability.
+- Amazon Lambda: Serverless functions for processing and delivery of dynamic content.
+- Amazon CloudFront: A high performance, globally available content delivery network.
 
 ## Notas
 ### Segurança
@@ -132,7 +146,7 @@ O programa foi construído com base no modelo MSC, que apresenta:
 
 
 ## Contato
-Para quaisquer duvidas ou esclarecimentos:
+Para quaisquer duvidas ou perguntas relacioandas ao projeto:
 - email: vitorcampos742@gmail.com
 - telefone: 12 982170402
 - linkedin: https://www.linkedin.com/in/vitorcampos742/
